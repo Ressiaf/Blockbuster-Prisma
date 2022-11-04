@@ -29,6 +29,24 @@ const getMovies = async (req, res) => {
   res.status(200).send(movies);
 };
 
+const getMovieDetails = async (req, res) => {
+  const { id } = req.params;
+  let movies = await fetch("https://ghibliapi.herokuapp.com/films");
+  movies = await movies.json();
+  movies = movies.map((movie) => ({
+    id: movie.id,
+    title: movie.title,
+    description: movie.description,
+    director: movie.director,
+    producer: movie.producer,
+    release_date: movie.producer,
+    running_time: movie.running_time,
+    rt_score: movie.rt_score,
+  }));
+  const movie = movies.find((movie) => movie.id === id);
+  res.status(200).send(movie);
+};
+
 const getMoviesByRuntime = async (req, res) => {
   const maxRuntime = req.params.max;
   let movies = await fetch("https://ghibliapi.herokuapp.com/films");
@@ -48,49 +66,20 @@ const getMoviesByRuntime = async (req, res) => {
   res.status(200).send(movies);
 };
 
-const getMovieDetails = async (req, res) => {
-  const { id } = req.params;
-  let movies = await fetch("https://ghibliapi.herokuapp.com/films");
-  movies = await movies.json();
-  movies = movies.map((movie) => ({
-    id: movie.id,
-    title: movie.title,
-    description: movie.description,
-    director: movie.director,
-    producer: movie.producer,
-    release_date: movie.producer,
-    running_time: movie.running_time,
-    rt_score: movie.rt_score,
-  }));
-  const movie = movies.find((movie) => movie.id === id);
-  res.status(200).send(movie);
-};
 
-//Por Body
-// const getMovieByTitle = async (req, res) => {
-//   const { title } = req.body;
-//   console.log(title);
-
-//   const movie = await getFilmFromAPIByName(title);
-//   res.status(200).send(movie);
-// };
-
-//By Params - you should use a middle dash instead of a space 
-const getMovieByTitle = async (req, res) => {
+const getMovieByTitle = async (req, res , next) =>{
   try {
-    const { title } = req.params;
-    const titleFormated = title.split("-").join(" ");
-    console.log(titleFormated);
-    const response = await fetch("https://ghibliapi.herokuapp.com/films");
-    const movies = await response.json();
-    const movie = movies.find((movie) => movie.title === titleFormated);
-    movie
-      ? res.status(200).json(movie)
-      : res.status(404).json({ errorMessage: "Movie not found" });
+      const {title}  = req.body;
+      let movies = await fetch('https://ghibliapi.herokuapp.com/films');
+      movies = await movies.json()
+      const movie = movies.find((film) => film.title.includes(title))
+      res.status(200).json(movie);
   } catch (error) {
-    res.status(500).json({ errorMessage: "Internal error" });
+      res.status(404).send( "404 - Movie not found" )
+      error => next(error);
   }
-};
+}
+
 
 const addMovie = (req, res, next) => {
   const movie = getFilmFromAPIByName(req.body.title);
