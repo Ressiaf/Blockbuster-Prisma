@@ -98,45 +98,39 @@ const addFavourite = async (req, res, next) => {
   try {
     const code = req.params.code;
     const { review } = req.body;
-
-    prisma.movies.findUnique({ where: { code: code } }).then((film) => {
-      if (!film) throw new Error(" Pelicula no disponible ");
-
+    prisma.movies.findUnique( { where: {code: code} } ).then( (film) => {
+      if (!film) throw new Error("Movie dont avalaible");
       const newFavouriteFilms = {
-        MovieCode: film.code,
-        UserId: req.user.id,
+        movie_code: film.code,
+        user_id: req.user.id,
         review: review,
       };
-
-      prisma.favouritefilms.create(newFavouriteFilms).then((newFav) => {
+      prisma.favoriteFilms.create( {data:newFavouriteFilms} ).then( (newFav) => {
         if (!newFav) throw new Error("FAILED to add favorite movie");
-
-        res.status(201).send("Movie Added to Favorites");
-      });
-    });
-  } catch (error) {
-    (error) => next(error);
-  }
+        res.status(201).send("Movie Added to Favorites") } 
+      );
+    } );
+  } catch (err) { (err) => next(err)};
 };
 
-const allFavouritesMovies = async (req, res, next) => {
-  const allFilms = await FavouriteFilms.findAll({
-    where: { UserId: req.user.id },
-  });
 
+const allFavouritesMovies = async (req, res, next) => {
+  const allFilms = await prisma.favoriteFilms.findMany({
+    where: { user_id: req.user.id },
+  });
   const filmReduced = allFilms.map((film) => {
-    if (film.review != null) {
-      return film;
+    if (film.review != null) { return film;
     } else {
-      return {
-        id: film.id,
-        MovieCode: film.MovieCode,
-        UserId: film.UserId,
+        return {
+          id: film.id,
+          movie_code: film.MovieCode,
+          user_id: film.UserId,
+        };
       };
-    }
   });
   res.status(200).json(filmReduced);
 };
+
 
 module.exports = {
   getMovies,
