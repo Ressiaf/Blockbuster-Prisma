@@ -104,7 +104,7 @@ const addFavourite = async (req, res, next) => {
 
       const newFavouriteFilms = {
         movie_code: film.code,
-        user_id: req.user.id,
+        user_id: req.user.id, 
         review: review,
       };
 
@@ -119,11 +119,11 @@ const addFavourite = async (req, res, next) => {
   }
 };
 
-
 const allFavouritesMovies = async (req, res, next) => {
   const allFilms = await prisma.favoriteFilms.findMany({
     where: { user_id: req.user.id },
   });
+  
   const filmReduced = allFilms.map((film) => {
     if (film.review != null) { return film;
     } else {
