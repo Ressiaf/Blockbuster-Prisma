@@ -22,7 +22,8 @@ router.post("/login", UsersController.login);
 router.post("/register", UsersController.register);
 router.post("/movie", checkLoggedIn, MovieController.addMovie);
 router.post("/rent/:code", checkLoggedUser, RentController.rentMovie);
-router.post("/favourite/:code", checkLoggedUser, MovieController.addFavourite);
+router.post("/favorites/:code", checkLoggedUser, MovieController.addFavourite);
+
 
 router.put("/rent/:id",checkLoggedUser, RentController.returnRent);
 

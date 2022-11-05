@@ -98,19 +98,25 @@ const addFavourite = async (req, res, next) => {
   try {
     const code = req.params.code;
     const { review } = req.body;
-    prisma.movies.findUnique( { where: {code: code} } ).then( (film) => {
-      if (!film) throw new Error("Movie dont avalaible");
+
+    prisma.movies.findUnique({ where: { code: code } }).then((film) => {
+      if (!film) throw new Error(" Movie dont avalaible ");
+
       const newFavouriteFilms = {
         movie_code: film.code,
         user_id: req.user.id,
         review: review,
       };
-      prisma.favoriteFilms.create( {data:newFavouriteFilms} ).then( (newFav) => {
+
+      prisma.favoriteFilms.create({data:newFavouriteFilms}).then((newFav) => {
         if (!newFav) throw new Error("FAILED to add favorite movie");
-        res.status(201).send("Movie Added to Favorites") } 
-      );
-    } );
-  } catch (err) { (err) => next(err)};
+
+        res.status(201).json("Movie Added to Favorites");
+      });
+    });
+  } catch (error) {
+    (error) => next(error);
+  }
 };
 
 

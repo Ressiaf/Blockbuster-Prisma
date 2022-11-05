@@ -15,7 +15,7 @@
 
             Register  ✅
                     route : /register  
-                    metodo: Post 
+                    metodo: POST 
                     data: ( "email, dni, phone, password" ) 
                     rec.body:
                         {
@@ -26,13 +26,13 @@
                         }
 
             Login  ✅
-                    route : /login
+                    route : npm 
                     metodo: Post
                     data: ( "email, password" ) 
                     rec.body:
                         {
                             "email":"admin@avalith.com"
-                            "dni":"37896324"
+                            "password":"nodejs2022",
                         } 
 
             Logout  ✅
@@ -67,7 +67,7 @@
                     
         3-Sistema de alquiler: Se debe poder registrar un alquiler, actualizar el stock y luego poder registrar la devolución del alquiler, y mantener registro de las veces que una película fue alquilada
 
-            Alquilar ✅
+            Alquilar pelicula ✅
                 route: /rent/:code
                 metodo: POST
                 data: code
@@ -76,7 +76,14 @@
                        /rent/2baf70d1-42bb-4437-b551-e5fed5a87abe
                     }
 
-            Devolver ?
+            Devolver pelicula ✅
+                route: /rent/:id
+                metodo: PUT
+                data: code
+                req.params
+                    {
+                       /rent/1
+                    }
 
             Peliculas alquiladas ✅
                 route: /rent/user
@@ -85,3 +92,30 @@
                     {
                        /rent/user
                     }
+        
+        4-Sistema de multas: Al devolver un alquiler se le envía al usuario el precio final del alquiler, que es dependiendo de la duración esperada del alquiler, si se pasa de esta fecha se le agrega un monto exponencial por cada día.
+
+            Sistema de multas ✅
+                route: /rent/:code
+                metodo: POST
+                data: code
+                req.params
+                    {
+                       /rent/2baf70d1-42bb-4437-b551-e5fed5a87abe
+                    }
+                middleware : middlewares/rentPrice.js
+
+        5-Sistema de favoritos: Los usuarios pueden registrar qué películas son sus favoritas y opcionalmente dejar una pequeña reseña
+
+            Sistema de favoritos 
+                route: /favorites/:code
+                metodo: POST
+                data: code
+                req.params
+                    {
+                       /favorites/2baf70d1-42bb-4437-b551-e5fed5a87abe
+                    }
+                req.body
+                {
+                    "review":"I absolutely adore all of the Ghibli films that I've seen, especially Howl's Moving Castle."
+                }
