@@ -9,7 +9,6 @@ const errorParser = (error, req, res, next) => {
   } else if (error.status === 400 || error.errors.find(err => err.type === "notNull Violation")){
     res.status(400).send("BAD REQUEST")
   }
-    
   else if (error.status === 400 || error.type === 'SequelizeUniqueConstraintError') {
     res.status(400).send("BAD REQUEST")
   }

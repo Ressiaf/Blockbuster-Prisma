@@ -15,7 +15,8 @@ async function getFilmFromAPIByName(name) {
   films = await films.json();
   return prisma.films.findUnique((film) => film.title.includes(name));
 }
-const getMovies = async (req, res) => {
+
+const getMovies = async (req, res , next) => {
   try {
     const { order } = req.query;
     const response = await fetch(GHIBLI_APP);
@@ -29,11 +30,14 @@ const getMovies = async (req, res) => {
     ? res.status(200).json(movies)
     : res.status(404).json({ errorMessage: "Movies not found" });
   } catch (error) {
-    res.status(500).json({ errorMessage: "Internal server error" });
+    res
+      .status(500)
+      .json({ errorMessage: "Internal server error" })
+      .catch((err) => next(err));
   }
 };
 
-const getMovieDetails = async (req, res) => {
+const getMovieDetails = async (req, res, next) => {
   try {
     const { id } = req.params;
     let movies = await fetch(GHIBLI_APP);
@@ -54,7 +58,10 @@ const getMovieDetails = async (req, res) => {
       : res.status(404).json({ errorMessage: "Movie not found" });
   res.status(200).send(movie);
   } catch (error) {
-    res.status(500).json({ errorMessage: "Internal server error" });
+    res
+      .status(500)
+      .json({ errorMessage: "Internal server error" })
+      .catch((err) => next(err));
   }
 }
 
@@ -68,12 +75,14 @@ const getMoviesByRuntime = async (req, res , next ) => {
       res.status(200).send(movies)
     } else res.status(404).json({ errorMessage: "Movies not found" });
   } catch (error) {
-      res.status(500).json({ errorMessage: "Internal server error" })
+    res
+      .status(500)
+      .json({ errorMessage: "Internal server error" })
       .catch((err) => next(err));
   }
 };
 
-const getMovieByTitle = async (req, res) =>{
+const getMovieByTitle = async (req, res, next) =>{
   try {
       const {title}  = req.body;
       let movies = await fetch(GHIBLI_APP);
@@ -83,67 +92,16 @@ const getMovieByTitle = async (req, res) =>{
         ? res.status(200).json(movie)
         : res.status(404).json({ errorMessage: "Movie not found" });
   } catch (error) {
-    res.status(500).json({ errorMessage: "Internal server error" })
-    .catch((err) => next(err));
+    res
+      .status(500)
+      .json({ errorMessage: "Internal server error" })
+      .catch((err) => next(err));
   }
 }
-
-const addMovie = (req, res, next) => {
-  const movie = getFilmFromAPIByName(req.body.title);
-  const newMovie = {
-    code: movie.id,
-    title: movie.title,
-    stock: 5,
-    rentals: 0,
-  };
-  prisma.movies
-    .create(newMovie)
-    .then((movie) => res.status(201).send("Movie Stocked"))
-    .catch((err) => next(err));
-};
-
-const addFavourite = async (req, res, next) => {
-  try {
-    const code = req.params.code;
-    const { review } = req.body;
-    prisma.movies.findUnique({ where: { code: code } }).then((film) => {
-      if (!film) throw new Error(" Movie dont avalaible ");
-      const newFavouriteFilms = {
-        movie_code: film.code,
-        user_id: req.user.id, 
-        review: review,
-      };
-      prisma.favoriteFilms
-        .create({data:newFavouriteFilms})
-        .then((newFav) => {
-          if (!newFav) throw new Error("FAILED to add favorite movie");
-          res.status(201).json("Movie Added to Favorites");
-      });
-    });
-  } catch (error) {
-    res.status(500).json({ errorMessage: "Internal server error" })
-    .catch((err) => next(err));
-  }
-};
-
-const allFavouritesMovies = async (req, res, next) => {
-  try {
-    const allFilms = await prisma.favoriteFilms.findMany({
-      where: { user_id: req.user.id },
-    });
-    res.status(200).json(allFilms);
-  } catch (error) {
-    res.status(500).json({ errorMessage: "Internal server error" })
-  }
-};
-
 
 module.exports = {
   getMovies,
   getMovieDetails,
   getMoviesByRuntime,
-  addMovie,
-  addFavourite,
-  allFavouritesMovies,
   getMovieByTitle,
 };
