@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "nodemon app.js",
     "test": "mocha --exit",
-    "push":"npx prisma db push",
+    "push": "npx prisma db push",
     "seed": "node ./seeders/seeders.js --trace-warnings"
   },
   "author": "",
@@ -33,6 +33,7 @@
     "assert": "^2.0.0",
     "chai": "^4.3.6",
     "mocha": "^10.0.0",
+    "morgan": "^1.10.0",
     "prisma": "^4.5.0",
     "sequelize-cli": "^6.4.1",
     "supertest": "^6.2.4"

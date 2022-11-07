@@ -2,22 +2,21 @@ const { PrismaClient } = require("@prisma/client");
 
 const prisma = new PrismaClient();
 
-const { rentPrice } = require("../middlewares/rentPrice");
+const { rentPrice } = require("../helpers/rentPrice");
 
 const rentMovie = (req, res) => {
     try {
         const { code } = req.params;
         prisma.movies.findUnique({ where: { code: code } }).then((rental) => {
         if (!rental) {
-            return res.status(400).json({ errorMessage: "Movie not found" });
+            return res.status(404).json({ errorMessage: "Movie not found" });
         }
         if (rental.stock === 0) {
-            return res.status(400).json({ errorMessage: "Movie out of stock" });
+            return res.status(404).json({ errorMessage: "Movie out of stock" });
         }
         prisma.rents
             .create({
                 data: {
-                    message: "you rented successfully",
                     code: rental.code,
                     id_user: req.user.id,
                     rent_date: new Date(Date.now()),
@@ -30,13 +29,17 @@ const rentMovie = (req, res) => {
                     data: { stock: rental.stock - 1, rentals: rental.rentals + 1 },
                     where: { code: rental.code },
                 })
-                .then(() => res.status(201).send(data));
+                .then(() => res.status(201).json({
+                    Message: "you rented successfully",
+                    Data: data
+                }));
             });
         });
     } catch (error) {
         res
             .status(500)
-            .json({ errorMessage: "Internal server error", error:error })
+            .json({ errorMessage: "Internal server error" })
+            .catch((err) => next(err));
     }
 };
 
@@ -68,7 +71,8 @@ const returnRent = async (req, res) => {
     } catch (error) {
         res
             .status(500)
-            .json({ errorMessage: "Internal server error", error: error })
+            .json({ errorMessage: "Internal server error" })
+            .catch((err) => next(err));
     }
 };
 
@@ -85,7 +89,12 @@ const getAllRents = async (req, res) => {
         rents.length > 0
             ? res.status(200).json(rents)
             : res.status(404).json({ errorMessage: "Rents not found" });
-    } catch (error) { res.status(500).json({ errorMessage: "Internal server error" }) }
+    } catch (error) { 
+        res
+            .status(500)
+            .json({ errorMessage: "Internal server error" })
+            .catch((err) => next(err));
+    }
 };
 
 const rentsByUser = async (req, res, next) => {
@@ -104,7 +113,10 @@ const rentsByUser = async (req, res, next) => {
             ? res.status(200).json(rentsByUser)
             : res.status(404).json({ errorMessage: "Movies not found" });
     } catch (error) {
-        res.status(500).json({ errorMessage: "Internal server error" });
+        res
+            .status(500)
+            .json({ errorMessage: "Internal server error" })
+            .catch((err) => next(err));
     }
 };
 

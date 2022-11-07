@@ -43,12 +43,12 @@ model Movies {
 }
 
 model FavoriteFilms{
-    favorite_id Int @id @default(autoincrement())
-    movie_code String @unique 
-    movies Movies[]
-    user_id Int 
-    review String?
-    user User[]
+    id       Int   @id @default(autoincrement())
+    id_user  Int
+    id_movie String
+    review   String? 
+    movie    Movies @relation(fields: [id_movie], references: [code], onDelete: Cascade)
+    user     User  @relation(fields: [id_user], references: [id], onDelete: Cascade)
 } 
 
 enum Role {

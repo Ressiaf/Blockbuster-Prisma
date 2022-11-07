@@ -14,7 +14,7 @@
         1-Sistema de usuarios: Debe crearse un sistema donde se puedan registrar usuarios y hacer login y logout 
 
             Register  ✅
-                    route : /register  
+                    route : /api/users/register
                     metodo: POST 
                     data: ( "email, dni, phone, password" ) 
                     rec.body:
@@ -26,17 +26,18 @@
                         }
 
             Login  ✅
-                    route : npm 
-                    metodo: Post
+                    route : /api/users/login
+                    metodo: POST
                     data: ( "email, password" ) 
                     rec.body:
                         {
-                            "email":"admin@avalith.com"
+                            "email":"admin-alexis@avalith.com",
                             "password":"nodejs2022",
+                            "role":"ADMIN"
                         } 
 
             Logout  ✅
-                    route : /logout
+                    route : api/users/logout
                     metodo: Get
                     data: token
                     rec.body:
@@ -48,8 +49,8 @@
         2-Se debe poder buscar películas por nombre o por código, la información deberá salir desde la API
 
             Get movie by title ✅
-                route: /search
-                metodo: Get
+                route: api/movies/search
+                metodo: GET
                 data: title
                 rec.body
                     {
@@ -58,8 +59,8 @@
 
             Get movie by Id ✅
                 route: /movies/:id
-                metodo: Get
-                data: id
+                metodo: GET
+                data: code
                 req.params
                     {
                        /movies/2baf70d1-42bb-4437-b551-e5fed5a87abe
@@ -68,46 +69,47 @@
         3-Sistema de alquiler: Se debe poder registrar un alquiler, actualizar el stock y luego poder registrar la devolución del alquiler, y mantener registro de las veces que una película fue alquilada
 
             Alquilar pelicula ✅
-                route: /rent/:code
+                route: /rents/:code
                 metodo: POST
                 data: code
                 req.params
                     {
-                       /rent/2baf70d1-42bb-4437-b551-e5fed5a87abe
+                       /rents/2baf70d1-42bb-4437-b551-e5fed5a87abe
                     }
 
             Devolver pelicula ✅
-                route: /rent/:id
+                route: /rents/:id
                 metodo: PUT
-                data: code
+                data: id
                 req.params
                     {
-                       /rent/1
+                       /rents/1
                     }
 
             Peliculas alquiladas ✅
-                route: /rent/user
+                route: /rents/user
                 metodo: GET
+                data: order
                 req.params
                     {
-                       /rent/user
+                       /rents/user?order=desc
                     }
         
         4-Sistema de multas: Al devolver un alquiler se le envía al usuario el precio final del alquiler, que es dependiendo de la duración esperada del alquiler, si se pasa de esta fecha se le agrega un monto exponencial por cada día.
 
             Sistema de multas ✅
-                route: /rent/:code
-                metodo: POST
+                route: /rents/:id
+                metodo: PUT
                 data: code
                 req.params
                     {
-                       /rent/2baf70d1-42bb-4437-b551-e5fed5a87abe
+                       /rents/1
                     }
                 middleware : middlewares/rentPrice.js
 
         5-Sistema de favoritos: Los usuarios pueden registrar qué películas son sus favoritas y opcionalmente dejar una pequeña reseña
 
-            Sistema de favoritos 
+            Sistema de favoritos ✅
                 route: /favorites/:code
                 metodo: POST
                 data: code
