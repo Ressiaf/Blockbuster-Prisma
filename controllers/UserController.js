@@ -1,9 +1,9 @@
-const bcrypt = require("bcrypt");
-
+//TOKEN JWT 
 const jwt = require("jsonwebtoken");
-
+//PASSWORD SCRYPT
+const bcrypt = require("bcrypt");
+//PRISMA SET UP 
 const { PrismaClient } = require("@prisma/client");
-
 const prisma = new PrismaClient();
 
 const login = (req, res, next) => {
@@ -24,7 +24,6 @@ const login = (req, res, next) => {
                         },
                     });
                 }
-                // Validates that the password typed by the user is the one stored in the db.
                 if (!bcrypt.compareSync(password, usuarioDB.password)) {
                     return res.status(400).json({
                         ok: false,
@@ -33,7 +32,6 @@ const login = (req, res, next) => {
                         },
                     });
                 }
-                // Generate authentication token
                 let token = jwt.sign(
                     {usuario: usuarioDB,},
                     process.env.SEED_AUTENTICACION,

@@ -1,5 +1,5 @@
+//PRISMA SET UP 
 const { PrismaClient } = require("@prisma/client");
-
 const prisma = new PrismaClient();
 
 const addFavorite = async (req, res, next) => {
@@ -15,13 +15,11 @@ const addFavorite = async (req, res, next) => {
         if (verifyFavoriteFilm)return res.status(400).json({ errorMessage: "Film already added to favorite" });
         prisma.movies.findUnique({ where: { code: code } }).then((film) => {
         if (!film) throw new Error(" Movie dont avalaible ");
-
         const newFavouriteFilms = {
             id_movie: film.code,
             id_user: req.user.id,
             review: review,
         };
-
         prisma.favoriteFilms
             .create({ data: newFavouriteFilms })
             .then((newFav) => {
@@ -30,7 +28,9 @@ const addFavorite = async (req, res, next) => {
             });
         });
     } catch (error) {
-        (error) => next(error);
+        res
+            .status(500)
+            .json({ errorMessage: "Internal server error", error: error });
     }
     };
 
@@ -50,8 +50,8 @@ const allFavoritesMovies = async (req, res, next) => {
         : res.status(404).json({ errorMessage: "Movies not found" });
     } catch (error) {
         res
-        .status(500)
-        .json({ errorMessage: "Internal server error", error: error });
+            .status(500)
+            .json({ errorMessage: "Internal server error", error: error });
     }
 };
 

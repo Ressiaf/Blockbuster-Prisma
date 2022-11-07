@@ -1,7 +1,7 @@
+//PRISMA SET UP 
 const { PrismaClient } = require("@prisma/client");
-
 const prisma = new PrismaClient();
-
+//MIDDLEWARES
 const { rentPrice } = require("../helpers/rentPrice");
 
 const rentMovie = (req, res) => {
