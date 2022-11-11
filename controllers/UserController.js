@@ -46,13 +46,13 @@ const login = (req, res, next) => {
                 .catch((error) => next(error));
         }
     } catch (error) {
-        const { name } = error;
-        const errorMessage = prismaError[name] || "Internal server error";
-        res.status(500).json({ errorMessage });
+        res
+        .status(500)
+        .json({ errorMessage: "Internal server error" ,error: error})
     }
 };
 
-const register = async (req, res, next) => {
+const register = async (req, res ) => {
     try {
         let { email, password, dni, phone } = req.body;
         if (!email || !password || !dni || !phone) {
@@ -91,12 +91,11 @@ const register = async (req, res, next) => {
     } catch (error) {
         res
         .status(500)
-        .json({ errorMessage: "Internal server error" })
-        .catch((err) => next(err));
-    }
+        .json({ errorMessage: "Internal server error" ,error: error})
+    };
 };
 
-const logout = (req, res, next) => {
+const logout = (req, res) => {
     req.user = null;
     res
     .status(200)
@@ -108,8 +107,9 @@ const logout = (req, res, next) => {
     res.redirect("/login");
 };
 
+
 module.exports = {
     login,
     register,
-    logout,
+    logout
 };

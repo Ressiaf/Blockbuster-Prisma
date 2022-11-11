@@ -7,7 +7,7 @@ generator client {
 
 datasource db {
     provider = "mysql"
-    url      = env("DATABASE_URL")
+    url = env("DATABASE_URL")
 }
 model User {
     id Int @id @default(autoincrement())
@@ -28,7 +28,7 @@ model Rents {
     movie Movies @relation(fields: [code], references: [code])
     rent_date DateTime @default(now())
     refund_date DateTime @default(now())
-    userRefund_date DateTime @default(now())
+    userRefund_date DateTime?
 }
 
 model Movies {

@@ -23,10 +23,10 @@ async function fetchMovies() {
   console.log(movieArray);
 
   const upload = async () => {
-    const a = await prisma.movies.createMany({
+    const array = await prisma.movies.createMany({
       data: movieArray,
     });
-    console.log(a);
+    console.log(array);
   };
 
   upload();

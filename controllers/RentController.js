@@ -1,6 +1,7 @@
 //PRISMA SET UP 
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
+
 //MIDDLEWARES
 const { rentPrice } = require("../helpers/rentPrice");
 
@@ -67,7 +68,6 @@ const returnRent = async (req, res) => {
             price: rentPrice(rental.userRefund_date, rental.refund_date),
             data: movie,
         });
-        await prisma.rents.delete({ where: { id_rent: id } });
     } catch (error) {
         res
             .status(500)
@@ -97,13 +97,14 @@ const getAllRents = async (req, res) => {
     }
 };
 
-const rentsByUser = async (req, res, next) => {
+const rentsByUsers = async (req, res, next) => {
     try {
         let { order } = req.query;
         order ? (order = order) : (order = "asc");
-        let rentsByUser = await prisma.rents.findMany({
+        let  allRents = await prisma.rents.findMany({
             where: { id_user: req.user.id },
         });
+        let rentsByUser =allRents.filter(rent=>rent.userRefund_date===null)
         if (order === "asc") {
             rentsByUser.sort((a, b) => a.rent_date - b.rent_date);
         } else if (order === "desc") {
@@ -120,10 +121,9 @@ const rentsByUser = async (req, res, next) => {
     }
 };
 
-
 module.exports = {
     rentMovie,
     returnRent,
     getAllRents, 
-    rentsByUser,
+    rentsByUsers,
 };

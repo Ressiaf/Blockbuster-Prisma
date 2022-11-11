@@ -31,11 +31,11 @@
   "devDependencies": {
     "@babel/helper-compilation-targets": "^7.19.1",
     "assert": "^2.0.0",
-    "chai": "^4.3.6",
+    "chai": "^4.3.7",
     "mocha": "^10.0.0",
     "morgan": "^1.10.0",
     "prisma": "^4.5.0",
     "sequelize-cli": "^6.4.1",
-    "supertest": "^6.2.4"
+    "supertest": "^6.3.1"
   }
 }

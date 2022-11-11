@@ -13,7 +13,7 @@ const RentController = require("../controllers/RentController");
 router
     .post("/:code", checkLoggedUser, RentController.rentMovie)
     .put("/:id",checkLoggedUser, RentController.returnRent)
-    .get("/user", checkLoggedUser, RentController.rentsByUser)
+    .get("/user", checkLoggedUser, RentController.rentsByUsers)
     .get("/all", checkAdmin , RentController.getAllRents)
     .use(errorHandler.notFound)
 
