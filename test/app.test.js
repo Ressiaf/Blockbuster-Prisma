@@ -12,18 +12,17 @@ const bcrypt = require("bcrypt")
 //   prisma.favoriteFilms.delete()
 // });
 
-describe("POST /register", () => {
+describe("POST /api/users/register", () => {
 
     const userExample = {
-        email: "cristian@gmail.com",
-        password: "avalith",
-        phone: "555-555-555",
-        dni: "43123453",
+        email: "admin-alexis2@avalith.com",
+        password: "nodejs2022",
+        phone: "555-555-554",
+        dni: "37896354",
     }
-
     it("should user register", (done) => {
         request(app)
-        .post("/register")
+        .post("/api/users/register")
         .send(userExample)
         .expect(201)
         .then(async (response) => {
@@ -35,8 +34,7 @@ describe("POST /register", () => {
             "password",
             "phone",
             "dni",
-            "createdAt",
-            "updatedAt",
+            
             ])
             const userDB = await prisma.user.findUnique({
             where: { email: userExample.email },
@@ -68,13 +66,12 @@ describe("POST /register", () => {
 
     describe("POST /login  --  GET /logout", () => {
     
-        const userExample = {
-        nombre: "Cristian",
-        email: "cristian@gmail.com",
-        password: "avalith",
+    const userExample = {
+        email: "admin-alexis@avalith.com",
+        password: "nodejs2022",
         phone: "555-555-555",
-        dni: "43123453",
-    };
+        dni: "37896324",
+    }
 
     it("should return 200 and a token", (done) => {
         request(app)
@@ -116,16 +113,15 @@ describe("POST /register", () => {
     describe('POST /favourite/:code', () => {
 
     const userExample = {
-        nombre: "Cristian",
-        email: "cristian@gmail.com",
-        password: "avalith",
+        email: "admin-alexis@avalith.com",
+        password: "nodejs2022",
         phone: "555-555-555",
-        dni: "43123453",
+        dni: "37896324",
     }
     const movieExample = {
         codeExample: "2baf70d1-42bb-4437-b551-e5fed5a87abe",
         codeExample2: "0440483e-ca0e-4120-8c50-4c8cd9b965d6",
-        review: "Colocar Review"
+        review: "I absolutely adore all of the Ghibli films that I've seen, especially Howl's Moving Castle."
     }
 
     it("Should return 201 and set movie as favourite for logged user with review", done => {
@@ -190,11 +186,10 @@ describe("POST /register", () => {
     describe('POST /rent/:code', () => {
 
     const userExample = {
-        nombre: "Cristian",
-        email: "cristian@gmail.com",
-        password: "avalith",
+        email: "admin-alexis@avalith.com",
+        password: "nodejs2022",
         phone: "555-555-555",
-        dni: "43123453"
+        dni: "37896324",
     }
 
     const movieExample = {
@@ -226,7 +221,7 @@ describe("POST /register", () => {
         })
     })
 
-    it.only("Should not allow rent if there is no stock", done => {
+    it("Should not allow rent if there is no stock", done => {
         request(app)
         .post('/login')
         .send(userExample)
@@ -313,11 +308,10 @@ describe("POST /register", () => {
     describe('GET /favourites', () => {
 
     const userExample = {
-        nombre: "Cristian",
-        email: "cristian@gmail.com",
-        password: "avalith",
+        email: "admin-alexis@avalith.com",
+        password: "nodejs2022",
         phone: "555-555-555",
-        dni: "43123453"
+        dni: "37896324",
     }
 
     it("Should return 200 status and logged user favourite list", done => {

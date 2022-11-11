@@ -12,7 +12,7 @@ const addFavorite = async (req, res, next) => {
             id_movie: code,
         },
         });
-        if (verifyFavoriteFilm)return res.status(400).json({ errorMessage: "Film already added to favorite" });
+        if (verifyFavoriteFilm.length > 0)return res.status(400).json({ errorMessage: "Film already added to favorite" });
         prisma.movies.findUnique({ where: { code: code } }).then((film) => {
         if (!film) throw new Error(" Movie dont avalaible ");
         const newFavouriteFilms = {
@@ -24,8 +24,11 @@ const addFavorite = async (req, res, next) => {
             .create({ data: newFavouriteFilms })
             .then((newFav) => {
             if (!newFav) throw new Error("FAILED to add favorite movie");
-            res.status(201).send("Movie Added to Favorites");
+            res.status(201).json({
+                message:"Movie Added to Favorites",
+                data: newFavouriteFilms
             });
+        });
         });
     } catch (error) {
         res

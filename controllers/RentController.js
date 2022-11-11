@@ -49,7 +49,7 @@ const returnRent = async (req, res) => {
         let { id } = req.params;
         id = parseInt(id);
         const rental = await prisma.rents.findUnique({ where: { id_rent: id } });
-        if (!rental) return res.status(404).json({ errorMessage: "Rent not found" });
+        if (rental.userRefund_date) return res.status(404).json({ errorMessage: "Rent not found" });
         rental.userRefund_date = new Date();
         const movie = await prisma.movies.findUnique({
             where: { code: rental.code },
@@ -64,10 +64,11 @@ const returnRent = async (req, res) => {
             data: { userRefund_date: rental.userRefund_date },
         });
         res.status(200).json({
-            message: "The movie was returned",
-            price: rentPrice(rental.userRefund_date, rental.refund_date),
-            data: movie,
+            message: `The movie ${movie.title} was returned`,
+            refound_date: rental.userRefund_date,
+            price: `${rentPrice(rental.userRefund_date, rental.refund_date)}$`,
         });
+        
     } catch (error) {
         res
             .status(500)

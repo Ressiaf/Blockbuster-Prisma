@@ -3,7 +3,6 @@ const express = require('express');
 const router = express.Router();
 
 //MIDDLEWARES
-const { checkLoggedUser, checkLoggedIn } = require("../middlewares/checks");
 const errorHandler = require("../middlewares/errorHandler");
 
 //CONTROLLER

@@ -63,7 +63,7 @@
 
 
             Get movie by Id ✅
-                route: /movies/:id
+                route: api/movies/:id
                 metodo: GET
                 data: code
                 req.params
@@ -75,7 +75,7 @@
 
 
             Alquilar pelicula ✅
-                route: /rents/:code
+                route: api/rents/:code
                 metodo: POST
                 data: code
                 req.params
@@ -85,7 +85,7 @@
 
 
             Devolver pelicula ✅
-                route: /rents/:id
+                route: api/rents/:id
                 metodo: PUT
                 data: id
                 req.params
@@ -95,7 +95,7 @@
 
 
             Peliculas alquiladas ✅
-                route: /rents/user
+                route: api/rents/user
                 metodo: GET
                 data: order
                 req.params
@@ -108,7 +108,7 @@
 
 
             Sistema de multas ✅
-                route: /rents/:id
+                route: api/rents/:id
                 metodo: PUT
                 data: code
                 req.params
@@ -122,7 +122,7 @@
 
 
             Sistema de favoritos ✅
-                route: /favorites/:code
+                route: api/favorites/:code
                 metodo: POST
                 data: code
                 req.params
@@ -158,7 +158,7 @@
 
     #Test
         Los tests se podrán hacer con JEST o Mocha pero tendrán que cumplir con:
-            -60% cobertura: Aceptable
+            -60% cobertura: Aceptable ✅
             -80% cobertura: Deseado
     
 
@@ -175,5 +175,3 @@
     Todo el trabajo debe ser entregado por github y debe tener un README.md que mencione todos los endpoints y su funcion pertinente ✅
 
     # Tecnologias utilizadas 
-    NODEJS
-▲ PRISMA

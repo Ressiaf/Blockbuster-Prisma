@@ -11,8 +11,8 @@ const UsersController = require("../controllers/UserController");
 
 //ROUTES
 router
-    .post("/login", checkLoggedIn , UsersController.login)
     .post("/register", UsersController.register)
+    .post("/login", UsersController.login)
     .get("/logout", checkLoggedUser, UsersController.logout)
     .get("/login", (_req, res) => res.send("You must to logued in"))
     .use(errorHandler.notFound)
