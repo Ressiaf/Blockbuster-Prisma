@@ -61,7 +61,7 @@ const updateMovie = async ( req , res , next ) => {
 
 const deleteMovie = async ( req , res , next ) => {
     try { 
-        let { code } = req.params;
+        let { code } = req.params ;
         const film = await prisma.movies.findUnique({ where: { code: code } });
         if (!film) return res.status(404).json({ errorMessage: "Movie not found" });
         await prisma.movies
